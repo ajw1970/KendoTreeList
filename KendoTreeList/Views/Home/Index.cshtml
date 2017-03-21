@@ -1,0 +1,54 @@
+﻿<div id="children"></div>
+
+<script>
+    $(document).ready(function () {
+        var dataSource = new kendo.data.TreeListDataSource({
+            transport: {
+                read: {
+                    url: "/PartChildren",
+                    dataType: "json",
+                },
+                //read: function (options, data) {
+                //    debugger;
+                //    var queryId;
+                //    if (id === null) {
+                //        queryId = 1;
+                //    } else {
+                //        queryId = data.id;
+                //    }
+                //    $.ajax({
+                //        url: "/PartChildren?id=" + queryId,
+                //        dataType: "json", 
+                //        success: function (result) {
+                //            options.success(result);
+                //        },
+                //        error: function (result) {
+                //            options.error(result);
+                //        }
+                //    });
+                //}
+
+            },
+            schema: {
+                model: {
+                    id: "Id",
+                    fields: {
+                        parentId: { field: "ParentId", nullable: true },
+                        hasChildren: { field: "HasChildren" }
+                    }
+                }
+            },
+            requestStart: function(e) {
+                debugger;
+            }
+        });
+
+        $("#children").kendoTreeList({
+            dataSource: dataSource,
+            columns: [
+                { field: "PartNo", expandable: true, title: "Part#", width: 250 },
+                { field: "Description" }
+            ]
+        });
+    });
+</script>
