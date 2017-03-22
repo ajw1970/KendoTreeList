@@ -10,7 +10,7 @@ namespace KendoTreeList.Controllers
     public class PartChildrenController : Controller
     {
         // GET: PaChildren
-        public JsonResult Index(int? id)
+        public JsonResult Index(int? id, bool returnNullParentId = false)
         {
             var data = new List<ChildData>
             {
@@ -41,7 +41,15 @@ namespace KendoTreeList.Controllers
             };
 
             var children = data
-                .Where(c => c.ParentId == id);
+                .Where(c => c.ParentId == id)
+                .Select(c => new ChildData()
+                {
+                    Id = c.Id,
+                    PartNo = c.PartNo,
+                    Description = c.Description,
+                    HasChildren = c.HasChildren,
+                    ParentId = returnNullParentId ? null : c.ParentId
+                });
 
             var result = Json(children, JsonRequestBehavior.AllowGet);
             return result;

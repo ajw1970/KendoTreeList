@@ -1,33 +1,22 @@
 ﻿<div id="children"></div>
 
 <script>
+    var rootParentId = 1;
     $(document).ready(function () {
         var dataSource = new kendo.data.TreeListDataSource({
             transport: {
                 read: {
                     url: "/PartChildren",
-                    dataType: "json",
+                    dataType: "json"
                 },
-                //read: function (options, data) {
-                //    debugger;
-                //    var queryId;
-                //    if (id === null) {
-                //        queryId = 1;
-                //    } else {
-                //        queryId = data.id;
-                //    }
-                //    $.ajax({
-                //        url: "/PartChildren?id=" + queryId,
-                //        dataType: "json", 
-                //        success: function (result) {
-                //            options.success(result);
-                //        },
-                //        error: function (result) {
-                //            options.error(result);
-                //        }
-                //    });
-                //}
+                parameterMap: function (data, type) {
+                    if (type !== "read" || data.id) {
+                        return data;
+                    }
 
+                    // if type is "read" and data.id is undefined then want to pass { "id": 1 } where 1 is the top level parentId requested by the user
+                    return $.extend({ "id": rootParentId, "returnNullParentId": true }, data);
+                }
             },
             schema: {
                 model: {
@@ -37,9 +26,6 @@
                         hasChildren: { field: "HasChildren" }
                     }
                 }
-            },
-            requestStart: function(e) {
-                debugger;
             }
         });
 
